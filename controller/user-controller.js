@@ -10,7 +10,7 @@ export const SignupUser = async (request, response) => {
   try{
     //const salt = await bcrypt.genSalt();
     const hashPassword = await bcrypt.hash(request.body.password, 10)
-    const user = {user: request.body.user, name:request.body.name, password:hashPassword};
+    const user = {username: request.body.username, name:request.body.name, password:hashPassword};
     const newUser = new User (user);
     newUser.save();
     return(
@@ -22,7 +22,7 @@ export const SignupUser = async (request, response) => {
 
 }
 export const LoginUser = async (request, response) => { 
-  let user = await User.findOne({userName : request.body.userName})
+  let user = await User.findOne({username : request.body.username})
   if (!user){
     return response.status(400).json({msg:'Username does not match'})
   }
@@ -33,7 +33,7 @@ export const LoginUser = async (request, response) => {
       const refressToken = Jwt.sign(user.toJSON(), process.env.REFRESS_SECRET_KEY);
       const newToken = new Token({token: refressToken});
       await newToken.save();
-      return response.status(200).json({accessToken:accessToken, refressToken:refressToken, name:user.name, userName:user.userName})
+      return response.status(200).json({accessToken:accessToken, refressToken:refressToken, name:user.name, user:user.user})
   
     }else{
       return response.status(400).json({msg:'Password does not match'})
