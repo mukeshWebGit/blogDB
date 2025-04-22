@@ -33,7 +33,7 @@ export const LoginUser = async (request, response) => {
       const refressToken = Jwt.sign(user.toJSON(), process.env.REFRESS_SECRET_KEY);
       const newToken = new Token({token: refressToken});
       await newToken.save();
-      return response.status(200).json({accessToken:accessToken, refressToken:refressToken, name:user.name, user:user.user})
+      return response.status(200).json({accessToken:accessToken, refressToken:refressToken, name:user.name, username:user.username})
   
     }else{
       return response.status(400).json({msg:'Password does not match'})
